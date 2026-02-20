@@ -162,8 +162,7 @@ def format_monthly_report_html(
     escaped_settings = escape(settings) if settings else None
     escaped_project_url = escape(project_url) if project_url else None
     body_style = (
-        "body{font-family:Arial,sans-serif;color:#1f2937;margin:0;"
-        "padding:24px;background:#f8fafc;}"
+        "body{font-family:Arial,sans-serif;color:#1f2937;margin:0;padding:24px;background:#f8fafc;}"
     )
     main_empty_style = (
         "main{max-width:920px;margin:0 auto;background:#ffffff;"
@@ -203,9 +202,7 @@ def format_monthly_report_html(
             "<div class='hero-meta'>"
             f"Month: {escaped_month} · Timezone: {escaped_tz} · Generated: {generated_label}"
             "</div></header>"
-            + (
-                f"<p class='footer'>Settings: {escaped_settings}</p>" if escaped_settings else ""
-            )
+            + (f"<p class='footer'>Settings: {escaped_settings}</p>" if escaped_settings else "")
             + (
                 "<p class='footer'>"
                 f"Project: <a href='{escaped_project_url}'>{escaped_project_url}</a>"
@@ -213,8 +210,7 @@ def format_monthly_report_html(
                 if escaped_project_url
                 else ""
             )
-            +
-            "<p style='margin-top:16px;'>No ISS windows found for this period.<br>"
+            + "<p style='margin-top:16px;'>No ISS windows found for this period.<br>"
             "Check minimum elevation, twilight threshold, and window duration settings.</p>"
             "</main></body></html>"
         )
@@ -276,9 +272,7 @@ def format_monthly_report_html(
         f"<span class='pill'>{len(by_day)} days</span>"
         "</header>"
         + "".join(sections)
-        + (
-            f"<p class='footer'>Settings: {escaped_settings}</p>" if escaped_settings else ""
-        )
+        + (f"<p class='footer'>Settings: {escaped_settings}</p>" if escaped_settings else "")
         + (
             "<p class='footer'>"
             f"Project: <a href='{escaped_project_url}'>{escaped_project_url}</a>"

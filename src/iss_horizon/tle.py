@@ -15,7 +15,9 @@ _DEFAULT_HEADERS: Final[dict[str, str]] = {
     "Accept": "text/plain,*/*;q=0.8",
 }
 _FALLBACK_STATIONS_URL: Final[str] = "https://celestrak.org/NORAD/elements/stations.txt"
-_FALLBACK_GP_URL: Final[str] = "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle"
+_FALLBACK_GP_URL: Final[str] = (
+    "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle"
+)
 _BUNDLED_ISS_TLE: Final[TLE] = TLE(
     name="ISS (ZARYA)",
     line1="1 25544U 98067A   26051.50000000  .00010000  00000+0  18277-3 0  9991",
