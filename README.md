@@ -1,11 +1,16 @@
 # ISS-Horizon
 
-[![CI](https://github.com/natalnetwork/ISS-Horizon/actions/workflows/ci.yml/badge.svg)](https://github.com/natalnetwork/ISS-Horizon/actions/workflows/ci.yml)
+[![CI](https://github.com/natalnetwork/ISS-Horizon/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/natalnetwork/ISS-Horizon/actions/workflows/ci.yml?query=branch%3Amain)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Releases](https://img.shields.io/github/v/release/natalnetwork/ISS-Horizon?display_name=tag)](https://github.com/natalnetwork/ISS-Horizon/releases)
 
 ISS-Horizon predicts **ISS pass windows** for your location and generates a monthly plain-text report.
 It can email the monthly report via SMTP and run unattended with a systemd timer in Debian-based LXC.
+
+> [!WARNING]
+> Never commit `.env` files or SMTP credentials. For unattended deployments, store secrets in
+> `/etc/iss-horizon/iss-horizon.env` and reference that file from systemd.
 
 ## Features
 
@@ -20,6 +25,14 @@ It can email the monthly report via SMTP and run unattended with a systemd timer
 - CLI-first workflow + systemd timer support
 
 ## Installation
+
+For a global CLI install (recommended for daily use):
+
+```bash
+pipx install iss-horizon
+```
+
+For local development:
 
 ```bash
 python3 -m venv .venv
@@ -130,6 +143,23 @@ sudo bash scripts/install_lxc_debian12.sh <your-repo-url>
 ```
 
 Before relying on delivery, edit `/etc/iss-horizon/iss-horizon.env` and set real SMTP credentials + recipient.
+
+## Releases
+
+- Create signed tags and publish GitHub Releases for each version.
+- Include a short changelog in the release body (see `RELEASE_v0.1.1.md` as a source).
+- Use `docs/release-checklist.md` and `.github/RELEASE_TEMPLATE.md` for a fast, consistent process.
+- Releases page: <https://github.com/natalnetwork/ISS-Horizon/releases>
+
+## Screenshots
+
+CLI (terminal output):
+
+![ISS-Horizon CLI screenshot](docs/screenshots/iss-horizon_CLI_screenshot.png)
+
+HTML report preview:
+
+![ISS-Horizon HTML report screenshot](docs/screenshots/iss-horizon_email_screenshot.png)
 
 ## Quality Tooling
 
