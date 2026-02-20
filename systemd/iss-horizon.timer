@@ -1,0 +1,10 @@
+[Unit]
+Description=Run ISS monthly report on first day of each month
+
+[Timer]
+OnCalendar=*-*-01 08:00:00
+Persistent=true
+Unit=iss-horizon.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iss-horizon"
+version = "0.1.0"
+description = "Predict ISS pass windows and send monthly email reports"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Sebastian Schwiebert" }]
+dependencies = [
+  "skyfield>=1.49",
+  "geopy>=2.4.1",
+  "timezonefinder>=6.5.2",
+  "requests>=2.32.3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.0",
+  "pytest-cov>=5.0.0",
+  "ruff>=0.8.0",
+  "mypy>=1.13.0",
+  "types-requests>=2.32.0.20241016",
+  "pre-commit>=4.0.0",
+]
+
+[project.scripts]
+iss-horizon = "iss_horizon.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+markers = [
+  "integration: marks tests that require external services",
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_configs = true
+mypy_path = "src"
+packages = ["iss_horizon"]
+ignore_missing_imports = true

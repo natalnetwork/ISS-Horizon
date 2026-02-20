@@ -1,0 +1,19 @@
+[Unit]
+Description=ISS Monthly Email Report
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=issbot
+Group=issbot
+EnvironmentFile=/etc/iss-horizon/iss-horizon.env
+WorkingDirectory=/opt/iss-horizon
+ExecStart=/opt/iss-horizon/.venv/bin/python -m iss_horizon.run_monthly
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
