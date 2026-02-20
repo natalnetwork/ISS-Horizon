@@ -1,6 +1,6 @@
-# ISS-Horizon v0.1.0
+# ISS-Horizon v0.1.1
 
-First public release of ISS-Horizon: a CLI-first Python project that predicts ISS pass windows and supports monthly email reporting.
+Maintenance update for ISS-Horizon focused on setup UX, naming consistency, and release polish.
 
 ## Highlights
 
@@ -31,6 +31,8 @@ First public release of ISS-Horizon: a CLI-first Python project that predicts IS
   - resilient endpoint handling
   - explicit HTTP headers
   - fallback behavior for ISS TLE retrieval
+- Setup wizard now suggests `ISS_LOCATION` from IP-based geolocation when no existing value is present,
+  with safe fallback to the previous default.
 
 ## CLI examples
 

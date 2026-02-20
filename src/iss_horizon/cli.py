@@ -7,8 +7,11 @@ import getpass
 import json
 import os
 import sys
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
+
+import requests
 
 from iss_horizon.config import Config
 from iss_horizon.geo import LocationResolver
@@ -88,6 +91,39 @@ def _parse_env_file(path: Path) -> dict[str, str]:
     return values
 
 
+def _location_from_ip_payload(payload: Mapping[str, object]) -> str | None:
+    city = str(payload.get("city", "")).strip()
+    region = str(payload.get("region") or payload.get("regionName") or "").strip()
+    country = str(payload.get("country_name") or payload.get("country") or "").strip()
+
+    parts = [part for part in (city, region, country) if part]
+    if len(parts) >= 2:
+        return ", ".join(parts)
+    return None
+
+
+def _detect_location_from_ip() -> str | None:
+    headers = {"User-Agent": "iss-horizon-setup/0.1"}
+    endpoints = [
+        "https://ipapi.co/json/",
+        "https://ipwho.is/",
+    ]
+
+    for endpoint in endpoints:
+        try:
+            response = requests.get(endpoint, headers=headers, timeout=3)
+            response.raise_for_status()
+            payload = response.json()
+            if isinstance(payload, dict):
+                suggestion = _location_from_ip_payload(payload)
+                if suggestion:
+                    return suggestion
+        except (requests.RequestException, ValueError):
+            continue
+
+    return None
+
+
 def _prompt_text(label: str, default: str | None = None, *, secret: bool = False) -> str:
     suffix = f" [{default}]" if default else ""
     prompt = f"{label}{suffix}: "
@@ -140,7 +176,11 @@ def _run_setup(args: argparse.Namespace) -> int:
     existing = _parse_env_file(env_path)
     cfg = Config.from_env()
 
-    location = _prompt_text("ISS location", existing.get("ISS_LOCATION", "Natal, RN, Brazil"))
+    location_default = existing.get("ISS_LOCATION")
+    if not location_default:
+        location_default = _detect_location_from_ip() or "Natal, RN, Brazil"
+
+    location = _prompt_text("ISS location", location_default)
     report_to = _prompt_text("Report recipient email", existing.get("REPORT_TO", ""))
     user_agent = _prompt_text(
         "Nominatim user agent",
