@@ -16,7 +16,7 @@ import requests
 from iss_horizon.config import Config
 from iss_horizon.geo import LocationResolver
 from iss_horizon.mailer import send_mail
-from iss_horizon.models import ISSHorizonError, VisibilityWindow
+from iss_horizon.models import ISSHorizonError, SMTPConfig, VisibilityWindow
 from iss_horizon.predictor import ISSPredictor
 from iss_horizon.report import format_monthly_report, format_monthly_report_html, month_range_for
 
@@ -125,7 +125,7 @@ def _detect_location_from_ip() -> str | None:
 
 
 def _prompt_text(label: str, default: str | None = None, *, secret: bool = False) -> str:
-    suffix = f" [{default}]" if default else ""
+    suffix = " [********]" if secret and default else f" [{default}]" if default else ""
     prompt = f"{label}{suffix}: "
     raw = getpass.getpass(prompt) if secret else input(prompt)
 
@@ -138,6 +138,33 @@ def _prompt_text(label: str, default: str | None = None, *, secret: bool = False
 def _env_line(key: str, value: str) -> str:
     escaped = value.replace("\\", "\\\\").replace('"', '\\"')
     return f'{key}="{escaped}"'
+
+
+def _smtp_config_from_setup_inputs(
+    smtp_host: str,
+    smtp_port: str,
+    smtp_user: str,
+    smtp_password: str,
+    smtp_from: str,
+    smtp_tls_mode: str,
+) -> SMTPConfig:
+    try:
+        port = int(smtp_port)
+    except ValueError as exc:
+        raise ISSHorizonError("SMTP port must be a valid integer") from exc
+
+    tls_mode = smtp_tls_mode.lower().strip()
+    if tls_mode not in {"ssl", "starttls"}:
+        raise ISSHorizonError("SMTP TLS mode must be 'ssl' or 'starttls'")
+
+    return SMTPConfig(
+        host=smtp_host.strip(),
+        port=port,
+        user=smtp_user.strip() or None,
+        password=smtp_password or None,
+        from_addr=smtp_from.strip() or (smtp_user.strip() or "iss-horizon@localhost"),
+        tls_mode=tls_mode,
+    )
 
 
 def _beautify_html(html: str) -> str:
@@ -256,10 +283,21 @@ def _run_setup(args: argparse.Namespace) -> int:
     if args.test_email:
         if not report_to:
             raise ISSHorizonError("REPORT_TO must be set to send test email")
+
+        smtp_cfg = _smtp_config_from_setup_inputs(
+            smtp_host=smtp_host,
+            smtp_port=smtp_port,
+            smtp_user=smtp_user,
+            smtp_password=smtp_password,
+            smtp_from=smtp_from,
+            smtp_tls_mode=smtp_tls_mode,
+        )
+
         send_mail(
             subject="ISS-Horizon setup test",
             body="This is a setup test email from ISS-Horizon.",
             to_addr=report_to,
+            smtp_config=smtp_cfg,
         )
         print("SMTP test email sent successfully")
 
