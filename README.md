@@ -1,5 +1,9 @@
 # ISS-Horizon
 
+[![CI](https://github.com/natalnetwork/ISS-Horizon/actions/workflows/ci.yml/badge.svg)](https://github.com/natalnetwork/ISS-Horizon/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 ISS-Horizon predicts **ISS pass windows** for your location and generates a monthly plain-text report.
 It can email the monthly report via SMTP and run unattended with a systemd timer in Debian-based LXC.
 
