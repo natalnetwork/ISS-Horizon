@@ -198,10 +198,6 @@ HTML report preview:
 If ISS-Horizon is useful to you, consider supporting the project:
 
 - GitHub Sponsors (recommended for this repository)
-- Open Collective (community funding)
-- Patreon (creator-style recurring support)
-
-To enable GitHub's native **Sponsor** button, configure your handles in [.github/FUNDING.yml](.github/FUNDING.yml).
 
 ## License
 
